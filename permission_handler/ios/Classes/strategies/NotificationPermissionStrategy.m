@@ -63,11 +63,17 @@
   if (@available(iOS 10 , *)) {
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-      if (settings.authorizationStatus == UNAuthorizationStatusDenied) {
-        permissionStatus = PermissionStatusPermanentlyDenied;
-      } else if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
+//      if (settings.authorizationStatus == UNAuthorizationStatusDenied) {
+//        permissionStatus = PermissionStatusPermanentlyDenied;
+//      } else if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined) {
+//        permissionStatus = PermissionStatusDenied;
+//      }
+      if (settings.notificationCenterSetting == UNNotificationSettingEnabled) {
+        permissionStatus = PermissionStatusGranted;
+      }else {
         permissionStatus = PermissionStatusDenied;
       }
+
       dispatch_semaphore_signal(sem);
     }];
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
